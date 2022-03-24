@@ -1,0 +1,12 @@
+<p><a href="{% url 'encuestas:inicio' %}">volver</a></p>
+<p><a href="{% url 'encuestas:resultados' pregunta.id %}">resultados</a></p>
+
+<h1>Pregunta '{{ pregunta.texto }}'</h1>
+
+<h3>Respuestas:</h3>
+
+<ul>
+	{% for eleccion in pregunta.eleccion_set.all %}
+	 <li>{{ eleccion.texto }}</li>
+	{% endfor %}
+</ul>

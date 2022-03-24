@@ -1,0 +1,13 @@
+<h1>Inicio del sitio</h1>
+
+
+
+{% if ultimas_cinco_preguntas %}
+	<ul>
+		{% for p in ultimas_cinco_preguntas %}
+		<li><a href="{% url 'encuestas:detalles' p.id %}">{{ p.texto }}</a></li>
+		{% endfor %}
+	</ul>
+{% else %}
+	<p>No hay encuestas disponibles</p>
+{% endif %}
