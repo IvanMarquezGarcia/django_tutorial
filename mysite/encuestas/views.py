@@ -31,4 +31,16 @@ def resultados(request, id_pregunta):
 	return HttpResponse("Resultados de pregunta " + str(id_pregunta))
 
 def votar(request, id_pregunta):
-	return HttpResponse("Estás votando para la pregunta " + str(id_pregunta))
+	pregunta = get_object_or_404(Pregunta, pk = id_pregunta)
+
+	try:
+		selected_eleccion = pregunta.eleccion_set.get(pk = request.POST['eleccion'])
+	except (KeyError, Eleccion.DoesNotExit):
+		# volver a mostrar el formulario de la pregunta
+		return render(request, 'encuestas/detalles.html', {'pregunta': pregunta, 'msg_err': "No has seleccionado ninguna opción"})
+	else:
+		selected_eleccion.votos += 1
+		selected_eleccion.save()
+		return HttpResponseRedirect(reverse('encuestas:resultados', args=(pregunta.id,)))
+
+#	return HttpResponse("Estás votando para la pregunta " + str(id_pregunta))
