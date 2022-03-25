@@ -1,0 +1,22 @@
+<p><a href="{% url 'encuestas:encuestas' %}">volver a 'Encuestas'</a></p>
+<!--
+<h1>Pregunta '{{ pregunta.texto }}'</h1>
+
+<h3>Respuestas:</h3>
+
+<ul>
+	{% for eleccion in pregunta.eleccion_set.all %}
+	 <li>{{ eleccion.texto }}</li>
+	{% endfor %}
+</ul>
+-->
+
+<h1>{{ pregunta.texto }}</h1>
+
+<ul>
+	{% for eleccion in pregunta.eleccion_set.all %}
+	<li>{{ eleccion.texto }} -- {{ eleccion.votos }} voto{{ eleccion.votos | pluralize }}</li>
+	{% endfor %}
+</ul>
+
+<a href="{% url 'encuestas:detalles' pregunta.id %}">¿Votar de nuevo?</a>

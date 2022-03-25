@@ -1,0 +1,24 @@
+<h1>{{ titulo }}</h1>
+
+
+{% if app_name == encuestas %}
+	{% if ultimas_cinco_preguntas %}
+		<ul>
+			{% for p in ultimas_cinco_preguntas %}
+			<li><a href="{% url 'encuestas:detalles' p.id %}">{{ p.texto }}</a></li>
+			{% endfor %}
+		</ul>
+	{% else %}
+		<p>No hay encuestas disponibles</p>
+	{% endif %}
+{% elif app_name == portal %}
+	{% if lista_apps %}
+		<ul>
+			{% for app in lista_apps %}
+			<li><a href="{% url 'app.name:' %}">{{ app.name }}</a></li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+{% else %}
+	<p>No se ha especificado ninguna app</p>
+{% endif %}

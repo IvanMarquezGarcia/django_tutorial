@@ -8,12 +8,53 @@ from encuestas.models import Pregunta, Eleccion
 
 from django.db.models import F
 
+from django.views import generic
+
 # Create your views here.
+#	-- VISTAS GENÉRICAS --
+def portal(request): # probar y borrar
+	ultimas_cinco_preguntas = Pregunta.objects.order_by('-fec_pub')[:5]
+	context = {'ultimas_cinco_preguntas': ultimas_cinco_preguntas, 'titulo': 'Inicio del sitio', 'app_name': 'portal'}
+	return render(request, 'encuestas/portal.html', context)
+
+
+class InicioView(generic.ListView):
+	template_name = 'encuestas/genericas/inicio_app.html'
+	context_object_name = 'ultimas_cinco_preguntas'
+
+	def get_queryset(self):
+		return Pregunta.objects.order_by('-fec_pub')[:5]
+
+class DetailView(generic.DetailView):
+	model = Pregunta
+	template_name = 'encuestas/genericas/detalles.html'
+
+class ResultsView(generic.DetailView):
+	model = Pregunta
+	template_name = 'encuestas/genericas/resultados.html'
+
+def votar(request, id_pregunta):
+	pregunta = get_object_or_404(Pregunta, pk = id_pregunta)
+
+	try:
+		selected_eleccion = pregunta.eleccion_set.get(pk = request.POST['eleccion'])
+	except (KeyError, Eleccion.DoesNotExist):
+		# volver a mostrar el formulario de la pregunta
+		return render(request, 'encuestas/detalles.html', {'pregunta': pregunta, 'msg_err': "No has seleccionado ninguna opción"})
+	else:
+		selected_eleccion.votos = F('votos') + 1
+		selected_eleccion.save()
+		return HttpResponseRedirect(reverse('encuestas:resultados', args=(pregunta.id,)))
+
+#	return HttpResponse("Estás votando para la pregunta " + str(id_pregunta))
+
+'''#	-- VISTAS NO GENÉRICAS --
 def portal(request):
 	ultimas_cinco_preguntas = Pregunta.objects.order_by('-fec_pub')[:5]
 	context = {'ultimas_cinco_preguntas': ultimas_cinco_preguntas}
 	return render(request, 'encuestas/portal.html', context)
-'''
+
+	# hardcoded desde aquí
 	output = "<h1>Inicio del sitio</h1><br><br>"
 	output += "Estas son las cinco últimas preguntas:<br>"
 
@@ -22,7 +63,8 @@ def portal(request):
 		output += "· " + p.texto + "<br>"
 
 	return HttpResponse(output)
-'''
+	# hardcoded hasta aquí
+
 def encuestas(request):
 	ultimas_cinco_preguntas = Pregunta.objects.order_by('-fec_pub')[:5]
 	context = {'ultimas_cinco_preguntas': ultimas_cinco_preguntas}
@@ -53,3 +95,4 @@ def votar(request, id_pregunta):
 		return HttpResponseRedirect(reverse('encuestas:resultados', args=(pregunta.id,)))
 
 #	return HttpResponse("Estás votando para la pregunta " + str(id_pregunta))
+'''

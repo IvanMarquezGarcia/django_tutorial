@@ -1,0 +1,28 @@
+<p><a href="{% url 'encuestas:encuestas' %}">volver a 'Encuestas'</a></p>
+<p><a href="{% url 'encuestas:resultados' pregunta.id %}">resultados</a></p>
+<!--
+<h1>Pregunta '{{ pregunta.texto }}'</h1>
+
+<h3>Respuestas:</h3>
+
+<ul>
+	{% for eleccion in pregunta.eleccion_set.all %}
+	 <li>{{ eleccion.texto }}</li>
+	{% endfor %}
+</ul>
+-->
+
+<form action = "{% url 'encuestas:votar' pregunta.id %}" method="post">
+{% csrf_token %}
+<fieldset>
+	<legend><h1>{{ pregunta.texto }}</h1></legend>
+	{% if msg_err %}
+	<p><strong>{{ msg_err }}</strong></p>
+	{% endif %}
+	{% for eleccion in pregunta.eleccion_set.all %}
+	<input type="radio" name="eleccion" id="eleccion{{ forloop.counter }}" value="{{ eleccion.id }}">
+	<label for="eleccion" id="eleccion{{ forloop.counter }}">{{ eleccion.texto }}</label><br>
+	{% endfor %}
+</fieldset>
+<input type="submit" value="Votar"/>
+</form>
