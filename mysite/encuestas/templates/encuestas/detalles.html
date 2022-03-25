@@ -1,4 +1,4 @@
-<p><a href="{% url 'encuestas:inicio' %}">volver</a></p>
+<p><a href="{% url 'encuestas:encuestas' %}">volver a 'Encuestas'</a></p>
 <p><a href="{% url 'encuestas:resultados' pregunta.id %}">resultados</a></p>
 <!--
 <h1>Pregunta '{{ pregunta.texto }}'</h1>
@@ -24,5 +24,5 @@
 	<label for="eleccion" id="eleccion{{ forloop.counter }}">{{ eleccion.texto }}</label><br>
 	{% endfor %}
 </fieldset>
-<input type="submit" value="Votar"
+<input type="submit" value="Votar"/>
 </form>
