@@ -20,7 +20,9 @@ def portal(request): # probar y borrar
 
 class InicioView(generic.ListView):
 	template_name = 'encuestas/genericas/inicio_app.html'
-	context_object_name = 'ultimas_cinco_preguntas'
+	
+	def get_context_data(self, **kwargs):
+		datos = super(InicioView, self).get_context_data
 
 	def get_queryset(self):
 		return Pregunta.objects.order_by('-fec_pub')[:5]
