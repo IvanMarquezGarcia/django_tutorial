@@ -1,0 +1,14 @@
+<h1>App 'Encuetas'</h1>
+
+
+
+{% if lista %}
+	<ul>
+		{% for app in lista %}
+		<li><a href="{% url 'app.name:app' %}">{{ app.name }}</a></li>
+		{% endfor %}
+	</ul>
+{% else %}
+	<p>Lista no válida</p>
+	<li><a href="{% url 'encuestas:encuestas' %}">Encuestas</a></li>
+{% endif %}

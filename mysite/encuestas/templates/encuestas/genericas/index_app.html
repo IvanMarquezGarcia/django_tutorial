@@ -1,0 +1,12 @@
+<h1>{{ titulo }}</h1>
+
+
+{% if lista %}
+	<ul>
+		{% for e in lista %}
+			<li><a href="{% url 'encuestas:detalles' e.id %}">{{ e.texto }}</a></li>
+		{% endfor %}
+	</ul>
+{% else %}
+	<p>La lista está vacía</p>
+{% endif %}

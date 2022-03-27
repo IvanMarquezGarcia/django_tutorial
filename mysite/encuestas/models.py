@@ -14,7 +14,7 @@ class Pregunta(models.Model):
 		return self.texto
 
 	def esReciente(self):
-		return self.fec_pub >= (timezone.now() - datetime.timedelta(days=1))
+		return timezone.now() >= self.fec_pub >= (timezone.now() - datetime.timedelta(days=1))
 
 
 

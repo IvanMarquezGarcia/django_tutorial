@@ -10,6 +10,8 @@ from django.db.models import F
 
 from django.views import generic
 
+from django.conf import settings
+
 # Create your views here.
 #	-- VISTAS GENÉRICAS --
 def portal(request): # probar y borrar
@@ -18,11 +20,20 @@ def portal(request): # probar y borrar
 	return render(request, 'encuestas/portal.html', context)
 
 
-class InicioView(generic.ListView):
-	template_name = 'encuestas/genericas/inicio_app.html'
-	
+class IndexView(generic.ListView):
+	'''	template_name = 'encuestas/genericas/index_app.html'
+	context_object_name = 'lista'
+	'''
+	template_name = 'encuestas/genericas/index_app.html'
+
 	def get_context_data(self, **kwargs):
-		datos = super(InicioView, self).get_context_data
+		context = super().get_context_data(**kwargs)
+
+		if self.request.path == reverse('encuestas:encuestas'):
+			context['lista'] = Pregunta.objects.all()
+			context['titulo'] = 'Encuestas'
+
+		return context
 
 	def get_queryset(self):
 		return Pregunta.objects.order_by('-fec_pub')[:5]
