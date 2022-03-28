@@ -16,6 +16,9 @@ class Pregunta(models.Model):
 	def esReciente(self):
 		return timezone.now() >= self.fec_pub >= (timezone.now() - datetime.timedelta(days=1))
 
+	class Meta:
+		ordering = ['-fec_pub']
+
 
 
 class Eleccion(models.Model):

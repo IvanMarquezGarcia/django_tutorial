@@ -12,6 +12,8 @@ from django.views import generic
 
 from django.conf import settings
 
+from django.utils import timezone
+
 # Create your views here.
 #	-- VISTAS GENÉRICAS --
 def portal(request): # probar y borrar
@@ -21,26 +23,30 @@ def portal(request): # probar y borrar
 
 
 class IndexView(generic.ListView):
-	'''	template_name = 'encuestas/genericas/index_app.html'
+#	template_name = 'encuestas/genericas/index_app.html'
 	context_object_name = 'lista'
-	'''
+
 	template_name = 'encuestas/genericas/index_app.html'
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 
 		if self.request.path == reverse('encuestas:encuestas'):
-			context['lista'] = Pregunta.objects.all()
+#			context['lista'] = Pregunta.objects.all()
 			context['titulo'] = 'Encuestas'
 
 		return context
 
 	def get_queryset(self):
-		return Pregunta.objects.order_by('-fec_pub')[:5]
+		return Pregunta.objects.filter(fec_pub__lte=timezone.now()).order_by('-fec_pub')[:5]
 
 class DetailView(generic.DetailView):
 	model = Pregunta
 	template_name = 'encuestas/genericas/detalles.html'
+	context_object_name = 'pregunta'
+
+	def get_queryset(self):
+		return Pregunta.objects.filter(fec_pub__lte=timezone.now())
 
 class ResultsView(generic.DetailView):
 	model = Pregunta
