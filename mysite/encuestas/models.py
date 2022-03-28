@@ -4,15 +4,21 @@ from django.db import models
 
 from django.utils import timezone
 
+from django.contrib import admin
+
 # Create your models here.
 
 class Pregunta(models.Model):
 	texto = models.CharField(max_length = 200)
-	fec_pub = models.DateTimeField('fecha de publicación')
+	fec_pub = models.DateTimeField('Fecha de publicación')
 
 	def __str__(self):
 		return self.texto
 
+	@admin.display(
+		boolean = True,
+		description = 'Publicado recientemente'
+	)
 	def esReciente(self):
 		return timezone.now() >= self.fec_pub >= (timezone.now() - datetime.timedelta(days=1))
 
