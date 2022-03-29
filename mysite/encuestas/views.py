@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from encuestas.models import Pregunta, Eleccion
 
@@ -16,11 +16,10 @@ from django.utils import timezone
 
 # Create your views here.
 #	-- VISTAS GENÉRICAS --
-def portal(request): # probar y borrar
+def portal(request):
 	ultimas_cinco_preguntas = Pregunta.objects.order_by('-fec_pub')[:5]
 	context = {'ultimas_cinco_preguntas': ultimas_cinco_preguntas, 'titulo': 'Inicio del sitio', 'app_name': 'portal'}
 	return render(request, 'encuestas/portal.html', context)
-
 
 class IndexView(generic.ListView):
 #	template_name = 'encuestas/genericas/index_app.html'
@@ -51,6 +50,49 @@ class DetailView(generic.DetailView):
 class ResultsView(generic.DetailView):
 	model = Pregunta
 	template_name = 'encuestas/genericas/resultados.html'
+
+# agregado como mejora de Django Tutorial
+class AgregarPreguntaView(generic.CreateView):
+	model = Pregunta
+	fields = ['texto', 'fec_pub']
+	template_name_suffix = '_agregar'
+	template_name = 'encuestas/genericas/pregunta_agregar.html'
+
+	def get_success_url(self):
+        	return reverse('encuestas:encuestas', kwargs={})
+
+	def post(self, request, *args, **kwargs):
+		pregunta = Pregunta(texto = request.POST.get("texto"), fec_pub = request.POST.get("fec_pub"))
+		pregunta.save()
+		pregunta.eleccion_set.create(texto = request.POST.get("texto_eleccion1"), votos = 0)
+		pregunta.eleccion_set.create(texto = request.POST.get("texto_eleccion2"), votos = 0)
+		pregunta.eleccion_set.create(texto = request.POST.get("texto_eleccion3"), votos = 0)
+		return HttpResponseRedirect(reverse_lazy('encuestas:encuestas'))
+
+# agregado como mejora de Django Tutorial
+class AgregarEleccionView(generic.CreateView):
+	model = Eleccion
+	fields = ['texto', 'votos']
+	template_name_suffix = '_agregar'
+	template_name = 'encuestas/genericas/eleccion_agregar.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['pregunta'] = Pregunta.objects.get(pk = self.kwargs['pk'])
+		return context
+
+	def get_success_url(self):
+		return reverse('encuestas:detalles', self.kwargs.get('pk'))
+
+	def post(self, request, *args, **kwargs):
+		pregunta = Pregunta.objects.get(pk = self.kwargs.get('pk'))
+		pregunta.eleccion_set.create(texto = request.POST.get("texto"), votos = request.POST.get("votos"))
+		pregunta.save()
+#		return HttpResponseRedirect(reverse('encuestas:detalles', args=[pregunta.pk]))
+#		return HttpResponseRedirect(reverse('encuestas:detalles', kargs={'id_pregunta': pregunta.pk}))
+#		return HttpResponseRedirect(reverse('encuestas:detalles', args=[self.pk]))
+		return HttpResponseRedirect(reverse('encuestas:detalles', args=(self.kwargs.get('pk'),)))
+#		return HttpResponseRedirect(reverse('encuestas:detalles', args=[str(self.pk)]))'''
 
 def votar(request, id_pregunta):
 	pregunta = get_object_or_404(Pregunta, pk = id_pregunta)

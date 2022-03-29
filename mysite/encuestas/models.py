@@ -26,7 +26,6 @@ class Pregunta(models.Model):
 		ordering = ['-fec_pub']
 
 
-
 class Eleccion(models.Model):
 	pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
 	texto = models.CharField(max_length = 200)

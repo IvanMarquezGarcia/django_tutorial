@@ -4,9 +4,11 @@ from django.test import TestCase
 
 from django.utils import timezone
 
+from django.db.utils import IntegrityError
+
 from django.urls import reverse
 
-from .models import Pregunta
+from .models import Pregunta, Eleccion
 
 # Create your tests here.
 
@@ -14,6 +16,13 @@ def crear_pregunta(texto, dias):
 	# crear pregunta
 	time = timezone.now() + datetime.timedelta(days = dias)
 	return Pregunta.objects.create(texto = texto, fec_pub = time)
+
+def crear_eleccion_asociada(p, texto, votos):
+	# crear eleccion asociada a una pregunta
+	return Eleccion(pregunta = p, texto = texto, votos = votos)
+
+def crear_eleccion_huerfana(texto, votos):
+	return Eleccion(texto = texto, votos = votos)
 
 class PreguntaModelTests(TestCase):
 	def test_es_reciente_con_fecha_futura(self):
@@ -87,3 +96,8 @@ class PreguntaDetailViewTests(TestCase):
 		self.assertContains(response, pregunta.texto)
 		self.assertEqual(response.status_code, 200)
 
+# Añadido como mejora de Django Tutorial
+class EleccionModelTest(TestCase):
+	def test_eleccion_pregunta_inexistente(self):
+		eleccion = crear_eleccion_huerfana(texto = 'Si', votos = 3)
+		self.assertFalse(hasattr(eleccion, 'pregunta'))

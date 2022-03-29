@@ -1,0 +1,26 @@
+<html>
+	<head>
+		<title>Agregar elección a pregunta</title>
+	</head>
+
+	<body>
+		<p><a href = "{% url 'encuestas:detalles' pregunta.id %}">volver a la pregunta</a></p>
+
+		<h3>Datos de pregunta</h3>
+		<label>&nbsp;&nbsp;&nbsp;&nbsp;Texto: '{{ pregunta.texto }}'</label>
+		<br><br>
+		<label>&nbsp;&nbsp;&nbsp;&nbsp;Fecha de publicaci&oacute;n: '{{ pregunta.fec_pub }}'</label>
+		<hr>
+		<h3>Datos de nueva elección</h3>
+		<form method = "post">{% csrf_token %}
+			<label for = "texto">&nbsp;&nbsp;&nbsp;&nbsp;Texto</label>
+			<input type = "text" name = "texto">
+			<br><br>
+			<label for = "votos">&nbsp;&nbsp;&nbsp;&nbsp;Votos</label>
+			<input type = "number" name = "votos">
+
+			<br><br><br><br>
+			<input type = "submit" value = "Agregar elecci&oacute;n a '{{ pregunta.texto }}'">
+		</form>
+	</body>
+</html>

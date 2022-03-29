@@ -3,7 +3,8 @@
 <link rel="stylesheet" type"text/css" href="{% static 'encuestas/style.css' %}">
 
 <h1>{{ titulo }}</h1>
-
+<!-- añadido como mejora de Django Tutorial -->
+<p>&nbsp &nbsp &nbsp <a href = "{% url 'encuestas:pregunta_agregar' %}">Agregar pregunta</a></p>
 
 {% if lista %}
 	<ul>

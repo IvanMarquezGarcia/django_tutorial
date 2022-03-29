@@ -1,0 +1,30 @@
+<html>
+	<head>
+		<title>Agregar Pregunta</title>
+	</head>
+
+	<body>
+		<p><a href="{% url 'encuestas:encuestas' %}">volver a 'Encuestas'</a></p>
+
+		<form method = "post">{% csrf_token %}
+			<h3>Datos de pregunta</h3>
+			{{ form.as_p }}
+			<hr>
+			<h3>Elecciones</h3>
+			<label for = "texto_eleccion1">Texto elección 1</label>
+			<input type = "text" name = "texto_eleccion1">
+			<br><br>
+			
+			<label for = "texto_eleccion2">Texto elección 2</label>
+			<input type = "text" name = "texto_eleccion2">
+			<br><br>
+			
+			<label for = "texto_eleccion3">Texto elección 3</label>
+			<input type = "text" name = "texto_eleccion3">
+			<br><br>
+
+			<br><br><br>
+			<input type = "submit" value = "Guardar nueva pregunta">
+		</form>
+	</body>
+</html>

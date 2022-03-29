@@ -1,5 +1,6 @@
-<p><a href="{% url 'encuestas:encuestas' %}">volver a 'Encuestas'</a></p>
-<p><a href="{% url 'encuestas:resultados' pregunta.id %}">resultados</a></p>
+<a href="{% url 'encuestas:encuestas' %}">volver a 'Encuestas'</a><br><br>
+<a href="{% url 'encuestas:resultados' pregunta.id %}">resultados</a><br><br>
+<a href="{% url 'encuestas:eleccion_agregar' pregunta.id %}">agregar elecci&oacute;n</a><br><br>
 <!--
 <h1>Pregunta '{{ pregunta.texto }}'</h1>
 
